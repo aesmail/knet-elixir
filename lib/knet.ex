@@ -50,6 +50,8 @@ defmodule Knet do
   @doc """
   Takes a map of transaction details and returns the transaction details from KNET.
 
+  You might want to use this function to verify the status of a transaction.
+
   The `params` map should contain the following required keys:
   - `knet_username`
   - `knet_password`
