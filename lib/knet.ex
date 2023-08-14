@@ -5,6 +5,7 @@ defmodule Knet do
 
   @doc """
   Takes a map of payment details and returns a KNET payment link.
+
   The `payment_details` map should contain the following required keys:
   - `knet_username`
   - `knet_password`
