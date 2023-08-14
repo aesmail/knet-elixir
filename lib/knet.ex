@@ -21,6 +21,25 @@ defmodule Knet do
   - `lang`. Could be ENG or AR (defaults to ENG)
   - `udf1` to `udf5` (user defined fields). These are optional and will be returned back to you in the response.
 
+  Example:
+
+  ```
+  payment_details = %{
+    "knet_username" => "your-knet-api-username-or-id",
+    "knet_password" => "your-knet-api-password",
+    "knet_key" => "your-knet-api-key",
+    "track_id" => "230814Kdiu83fkjdsl",
+    "amount" => "1.5",
+    "response_url" => "http://localhost:4000/",
+    "error_url" => "http://localhost:4000/"
+    "lang" => "ENG",
+    "udf1" => "my custom value"
+  }
+
+  Knet.get_payment_link(payment_details)
+  #=> "https://kpay.com.kw/kpg/PaymentHTTP.htm?param=paymentInit&trandata=73425fd4...7be9cea92&responseURL=http://localhost:8001/&errorURL=http://localhost:8001/"
+  ```
+
   """
   @spec get_payment_link(map()) :: String.t()
   def get_payment_link(payment_details) do
