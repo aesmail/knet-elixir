@@ -118,7 +118,7 @@ defmodule Knet do
 
   The `params` map should contain the following required keys:
   - `knet_key`
-  - `trandata` (the encrypted response data)
+  - `trandata` (the encrypted response data received from KNET)
 
   Example:
 

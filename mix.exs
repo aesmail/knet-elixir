@@ -44,6 +44,6 @@ defmodule Knet.MixProject do
   end
 
   defp description() do
-    "An elixir package for dealing with KNET payments in Kuwait"
+    "An elixir package for dealing with KNET payments in Kuwait (https://www.knet.com.kw)"
   end
 end
