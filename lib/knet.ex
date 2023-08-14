@@ -14,6 +14,7 @@ defmodule Knet do
   - `error_url`
   - `track_id`
 
+
   The following keys are optional:
   - `knet_url` (defaults to https://kpay.com.kw/kpg/PaymentHTTP.htm)
   - `currency_code` (defaults to 414)
@@ -28,20 +29,24 @@ defmodule Knet do
 
   @doc """
   Takes a map of transaction details and returns the transaction details from KNET.
+
   The `params` map should contain the following required keys:
   - `knet_username`
   - `knet_password`
-  - `track_id` (the same track_id used in the payment link)
+  - `track_id` (the same `track_id` used in the payment link)
   - `amount`
+
 
   The following keys are optional:
   - `knet_url` (defaults to https://kpay.com.kw/kpg/tranPipe.htm?param=tranInit)
   - `trans_id` (defaults to the `track_id` value)
-  - 'udf5` (defaults to TrackID)
+  - `udf5` (defaults to "TrackID")
+
 
   This function returns:
   - `{:ok, map()}` if the transaction details were fetched successfully.
   - `{:error, map()}` if the transaction details could not be obtained successfully.
+
 
   Example of a successful attempt to retrieve an existing transaction:
 
@@ -71,6 +76,7 @@ defmodule Knet do
    }}
   ```
 
+
   Example of a failed attempt to retrieve a non-existent transaction:
 
   ```
@@ -81,6 +87,7 @@ defmodule Knet do
      "result" => "!ERROR!-IPAY0100263-Transaction not found."
    }}
   ```
+
   """
   @spec get_transaction_details(map()) :: {:ok, map()} | {:error, map()}
   def get_transaction_details(params) do
