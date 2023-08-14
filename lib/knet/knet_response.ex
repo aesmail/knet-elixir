@@ -17,4 +17,21 @@ defmodule Knet.Response do
   defp parse_result(%{"response" => %{"result" => _} = result}) do
     {:ok, result}
   end
+
+  def decrypt_payment_response(params) do
+    key = Map.get(params, "knet_key")
+    data = Map.get(params, "trandata")
+    decoded = Base.decode16!(data)
+    decrypted_data = :crypto.crypto_one_time(:aes_128_cbc, key, key, decoded, false)
+    <<x::utf8>> = binary_part(decrypted_data, String.length(decrypted_data) - 1, 1)
+
+    # pad_length = String.slice(decrypted_data, String.length(decrypted_data) - x, x) |> String.length()
+
+    details =
+      decrypted_data
+      |> String.slice(0, String.length(decrypted_data) - x)
+      |> URI.decode_query()
+
+    {:ok, details}
+  end
 end

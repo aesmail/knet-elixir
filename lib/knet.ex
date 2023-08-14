@@ -19,7 +19,7 @@ defmodule Knet do
   - `knet_url` (defaults to https://kpay.com.kw/kpg/PaymentHTTP.htm)
   - `currency_code` (defaults to 414)
   - `lang`. Could be ENG or AR (defaults to ENG)
-  - `udf1` to `udf5` (user defined fields). These are optional and will be returned back to you in the response.
+  - `udf1` to `udf10` (user defined fields). These are optional and will be returned back to you in the response.
 
   Example:
 
@@ -111,5 +111,50 @@ defmodule Knet do
   @spec get_transaction_details(map()) :: {:ok, map()} | {:error, map()}
   def get_transaction_details(params) do
     Knet.Request.fetch_transaction(params)
+  end
+
+  @doc """
+  Takes a map of encrypted payment response details and returns the decrypted details.
+
+  The `params` map should contain the following required keys:
+  - `knet_key`
+  - `trandata` (the encrypted response data)
+
+  Example:
+
+  ```
+  params = %{
+    "knet_key" => "your-knet-api-key",
+    "trandata" => "A7241C57D2BBA5D16...4C8270500555B829F760EEC53"
+  }
+  Knet.parse_payment_response(params)
+  #=> {:ok,
+  %{
+    "amt" => "1.500",
+    "auth" => "000000",
+    "authRespCode" => "55",
+    "avr" => "N",
+    "paymentid" => "103322640000108419",
+    "postdate" => "0814",
+    "ref" => "322644009696",
+    "result" => "NOT CAPTURED",
+    "trackid" => "230815jfldshguifdsh",
+    "tranid" => "322638003291215",
+    "udf1" => "",
+    "udf2" => "",
+    "udf3" => "",
+    "udf4" => "",
+    "udf5" => "",
+    "udf6" => "",
+    "udf7" => "",
+    "udf8" => "",
+    "udf9" => "",
+    "udf10" => "",
+  }}
+  ```
+  """
+  @spec parse_payment_response(map()) :: {:ok, map()}
+  def parse_payment_response(params) do
+    Knet.Response.decrypt_payment_response(params)
   end
 end
