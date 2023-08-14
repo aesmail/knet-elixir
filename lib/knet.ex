@@ -23,53 +23,67 @@ defmodule Knet do
   """
   @spec get_payment_link(map()) :: String.t()
   def get_payment_link(payment_details) do
-    payment_details
-    |> get_payment_params()
-    |> encrypt_params(payment_details)
-    |> get_payment_url(payment_details)
+    Knet.Request.get_payment_link(payment_details)
   end
 
-  defp get_payment_params(payment_details) do
-    %{
-      "id" => Map.get(payment_details, "knet_username"),
-      "password" => Map.get(payment_details, "knet_password"),
-      "amt" => Map.get(payment_details, "amount"),
-      "currencycode" => Map.get(payment_details, "currency_code", "414"),
-      "action" => "1",
-      "langid" => Map.get(payment_details, "lang", "ENG"),
-      "responseURL" => Map.get(payment_details, "response_url"),
-      "errorURL" => Map.get(payment_details, "error_url"),
-      "trackid" => Map.get(payment_details, "track_id"),
-      "udf1" => Map.get(payment_details, "udf1"),
-      "udf2" => Map.get(payment_details, "udf2"),
-      "udf3" => Map.get(payment_details, "udf3"),
-      "udf4" => Map.get(payment_details, "udf4"),
-      "udf5" => Map.get(payment_details, "udf5")
-    }
-  end
+  @doc """
+  Takes a map of transaction details and returns the transaction details from KNET.
+  The `params` map should contain the following required keys:
+  - `knet_username`
+  - `knet_password`
+  - `track_id` (the same track_id used in the payment link)
+  - `amount`
 
-  defp encrypt_params(params, payment_details) do
-    params =
-      params
-      |> Enum.map(fn {k, v} -> "#{k}=#{v}" end)
-      |> Enum.join("&")
+  The following keys are optional:
+  - `knet_url` (defaults to https://kpay.com.kw/kpg/tranPipe.htm?param=tranInit)
+  - `trans_id` (defaults to the `track_id` value)
+  - 'udf5` (defaults to TrackID)
 
-    block_size = 16
-    pad = block_size - rem(String.length(params), block_size)
-    padded_params = params <> String.duplicate(List.to_string([pad]), pad)
+  This function returns:
+  - `{:ok, map()}` if the transaction details were fetched successfully.
+  - `{:error, map()}` if the transaction details could not be obtained successfully.
 
-    api_key = Map.get(payment_details, "knet_key")
+  Example of a successful attempt to retrieve an existing transaction:
 
-    :crypto.crypto_one_time(:aes_128_cbc, api_key, api_key, padded_params, true)
-    |> Base.encode16(case: :lower)
-  end
+  ```
+  {:ok,
+   %{
+     "amt" => "9.500",
+     "auth" => "887766",
+     "authRespCode" => "00",
+     "avr" => "N",
+     "payid" => "123456789",
+     "postdate" => "0814",
+     "ref" => "35666353638",
+     "result" => "SUCCESS",
+     "trackid" => "23098372989272",
+     "tranid" => "328276498379404",
+     "udf1" => "some-value",
+     "udf2" => "",
+     "udf3" => nil,
+     "udf4" => nil,
+     "udf5" => "TrackID",
+     "udf6" => nil,
+     "udf7" => nil,
+     "udf8" => nil,
+     "udf9" => nil,
+     "udf10" => nil
+   }}
+  ```
 
-  defp get_payment_url(encrypted_data, payment_details) do
-    knet_url = Map.get(payment_details, "knet_url", "https://kpay.com.kw/kpg/PaymentHTTP.htm")
-    knet_username = Map.get(payment_details, "knet_username")
-    response_url = Map.get(payment_details, "response_url")
-    error_url = Map.get(payment_details, "error_url")
+  Example of a failed attempt to retrieve a non-existent transaction:
 
-    "#{knet_url}?param=paymentInit&trandata=#{encrypted_data}&tranportalId=#{knet_username}&responseURL=#{response_url}&errorURL=#{error_url}"
+  ```
+  {:error,
+   %{
+     "error_code_tag" => "IPAY0100263",
+     "error_service_tag" => "null",
+     "result" => "!ERROR!-IPAY0100263-Transaction not found."
+   }}
+  ```
+  """
+  @spec get_transaction_details(map()) :: {:ok, map()} | {:error, map()}
+  def get_transaction_details(params) do
+    Knet.Request.fetch_transaction(params)
   end
 end
