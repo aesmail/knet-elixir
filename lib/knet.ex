@@ -128,29 +128,30 @@ defmodule Knet do
     "trandata" => "A7241C57D2BBA5D16...4C8270500555B829F760EEC53"
   }
   Knet.parse_payment_response(params)
-  #=> {:ok,
-  %{
-    "amt" => "1.500",
-    "auth" => "000000",
-    "authRespCode" => "55",
-    "avr" => "N",
-    "paymentid" => "103322640000108419",
-    "postdate" => "0814",
-    "ref" => "322644009696",
-    "result" => "NOT CAPTURED",
-    "trackid" => "230815jfldshguifdsh",
-    "tranid" => "322638003291215",
-    "udf1" => "",
-    "udf2" => "",
-    "udf3" => "",
-    "udf4" => "",
-    "udf5" => "",
-    "udf6" => "",
-    "udf7" => "",
-    "udf8" => "",
-    "udf9" => "",
-    "udf10" => "",
-  }}
+  {:ok,
+    %{
+      "amt" => "1.500",
+      "auth" => "000000",
+      "authRespCode" => "55",
+      "avr" => "N",
+      "paymentid" => "103322640000108419",
+      "postdate" => "0814",
+      "ref" => "322644009696",
+      "result" => "NOT CAPTURED",
+      "trackid" => "230815jfldshguifdsh",
+      "tranid" => "322638003291215",
+      "udf1" => "",
+      "udf2" => "",
+      "udf3" => "",
+      "udf4" => "",
+      "udf5" => "",
+      "udf6" => "",
+      "udf7" => "",
+      "udf8" => "",
+      "udf9" => "",
+      "udf10" => "",
+    }
+  }
   ```
   """
   @spec parse_payment_response(map()) :: {:ok, map()}
