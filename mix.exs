@@ -29,6 +29,7 @@ defmodule Knet.MixProject do
     [
       {:finch, "~> 0.16.0"},
       {:elixir_xml_to_map, "~> 3.0.0"},
+      {:decimal, "~> 2.0"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end

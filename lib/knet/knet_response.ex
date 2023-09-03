@@ -31,7 +31,33 @@ defmodule Knet.Response do
       decrypted_data
       |> String.slice(0, String.length(decrypted_data) - x)
       |> URI.decode_query()
+      |> process_response_details()
 
     {:ok, details}
+  end
+
+  defp process_response_details(params) do
+    status =
+      case Map.get(params, "result") do
+        "CAPTURED" -> :paid
+        "NOT CAPTURED" -> :failed
+        "CANCELED" -> :cancelled
+        _ -> :error
+      end
+
+    %{
+      status: status,
+      paid?: status == :paid,
+      failed?: status == :failed,
+      cancelled?: status == :cancelled,
+      amount: Map.get(params, "amt") |> Decimal.new(),
+      payment_id: Map.get(params, "paymentid"),
+      post_date: Map.get(params, "postdate"),
+      track_id: Map.get(params, "trackid"),
+      trx_id: Map.get(params, "tranid"),
+      reference: Map.get(params, "ref"),
+      auth_code: Map.get(params, "auth"),
+      raw: params
+    }
   end
 end
