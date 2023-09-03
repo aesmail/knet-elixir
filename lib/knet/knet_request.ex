@@ -37,7 +37,12 @@ defmodule Knet.Request do
       "udf2" => Map.get(payment_details, "udf2"),
       "udf3" => Map.get(payment_details, "udf3"),
       "udf4" => Map.get(payment_details, "udf4"),
-      "udf5" => Map.get(payment_details, "udf5")
+      "udf5" => Map.get(payment_details, "udf5"),
+      "udf6" => Map.get(payment_details, "udf6"),
+      "udf7" => Map.get(payment_details, "udf7"),
+      "udf8" => Map.get(payment_details, "udf8"),
+      "udf9" => Map.get(payment_details, "udf9"),
+      "udf10" => Map.get(payment_details, "udf10")
     }
   end
 
